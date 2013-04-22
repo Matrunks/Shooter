@@ -137,7 +137,7 @@ public class World {
 	}
 	
 	//actualmente no se usa esta funci—n
-	public boolean hitOnCovers(ArrayList<GameObject> objects){
+	/*public boolean hitOnCovers(ArrayList<GameObject> objects){
 		for(int i=0; i!=objects.size();i++){ //le sumo y resto ya que el arbol por los laterales tiene partes traspasables
 			if(objects.get(i)!=rag_doll){
 				if(hitOnObject(GameScreen.touchPoint,objects.get(i).position.x+30, objects.get(i).position.y, objects.get(i).width-60, objects.get(i).height)){
@@ -153,7 +153,7 @@ public class World {
 			}
 		}
 		return false;
-	}
+	}*/
 	
 	public void dispose(){
 		//limpiamos todos los objetos
