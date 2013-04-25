@@ -15,9 +15,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 public class Assets {
 	
 	public static TextureAtlas atlas; //representa al objeto que contiene la imagen grande
+	public static TextureAtlas shaders;
 	public static AtlasRegion background;
+	public static AtlasRegion shot;
 	public static AtlasRegion fase;
 	public static AtlasRegion queco;
+	
 	public static Sound disparo;
 	public static Sound hit;
 	public static Sound dead;
@@ -34,8 +37,6 @@ public class Assets {
 		disparo = Gdx.audio.newSound (Gdx.files.internal("data/Disparo_Gunner.ogg"));
 		hit = Gdx.audio.newSound (Gdx.files.internal("data/Hit.mp3"));
 		dead = Gdx.audio.newSound (Gdx.files.internal("data/Dead.mp3"));
-		/*estilotexto = new TextFieldStyle ();
-		vida = new TextField(estilotexto);*/
 		pium = Gdx.audio.newSound (Gdx.files.internal("data/Pium.mp3"));
 	}
 	

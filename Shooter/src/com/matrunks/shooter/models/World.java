@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import com.matrunks.shooter.models.RagDoll;
 import com.matrunks.shooter.Assets;
 import com.matrunks.shooter.screens.GameScreen;
@@ -24,6 +26,8 @@ public class World {
 	public int indice;
 	public static ArrayList<GameObject> objects;
 	public static ArrayList<GameObject> initialobjects;
+	public static ArrayList<GameObject> shaders;
+	public Shader shot;
 	private MathUtils math;
 	private boolean bool=false;
 	
@@ -32,6 +36,7 @@ public class World {
 		rag_doll = new RagDoll();
 		objects = new ArrayList<GameObject>();
 		initialobjects = new ArrayList<GameObject>();
+		shaders = new ArrayList<GameObject>();
 		map = new Map();
 		for(int i=0;i<13;i++){
 			cover = new Cover(math.random(-50,map.width()),math.random(0,map.height()));
@@ -45,7 +50,7 @@ public class World {
 	public void update (float delta){
 		ShotSecs+=delta; //vamos acumulando los segundos
 		RagdollReloadSecs+=delta;
-		//indice=objects.indexOf(rag_doll);
+		
 		//aqui metemos los cambios efectuados en los objetos
 		if(Gdx.input.isTouched()){ //si es pulsada la pantalla
 			if(pj.checkGun()){//Comprobamos el enfriamiento del arma
@@ -53,7 +58,6 @@ public class World {
 				GameScreen.camera.unproject(GameScreen.touchPoint.set(Gdx.input.getX(), Gdx.input.getY(),0));
 				//obtengo los metros desde los p’xeles gracias a la c‡mara y lo guardo en touchPoint
 
-				//if(!hitOnCovers(objects)){
 				//nueva comprobaci—n, si el mu–eco no est‡ en una cobertura
 				if(!rag_doll.isHidden()){
 						if(hitOnRagDoll(rag_doll)){
@@ -61,9 +65,15 @@ public class World {
 							rag_doll.damage(10); //le hacemos da–o
 							rag_doll.Freeze();
 							Assets.hit.play();
+						}else{ //si no hemos dado al queco, disparo con shader
+							if(GameScreen.touchPoint.y < map.height()){ //compruebo no dejar marca en el aire
+								shot = new Shader(0, (int)GameScreen.touchPoint.x, (int)GameScreen.touchPoint.y);
+								shaders.add(shot);
 						}
 			    }
-				Assets.disparo.play(0.3f);
+						Assets.disparo.play(0.3f); //sonido de disparo
+			    }
+				
 			}
 		}
 		
@@ -81,16 +91,17 @@ public class World {
 			rag_doll.NotReady();
 		}
 		
-		//si muere reiniciamos
+		//si muere aumentamos el nivel
 		if(!rag_doll.isAlive()){
 			Assets.dead.play();
 			level.setRecord();
 			initialize();
 		}
 		
+		//si muere el jugador, reiniciamos el nivel
 		if(!pj.isAlive()){
 			level.reset();
-			objects = (ArrayList<GameObject>) initialobjects.clone();
+			objects = (ArrayList<GameObject>) initialobjects.clone(); //necesitamos los objetos como al principio
 			initialize();
 		}
 		
@@ -102,11 +113,12 @@ public class World {
 	}
 	
 	public void initialize(){
-		level.incrementLevel();
+		shaders.clear();
+		level.incrementLevel(); //se incrementa el nivel ya que level empieza en 0
 		pj = new Player();
 		rag_doll.reset();
-		level.update(objects,rag_doll,map);
-		Collections.sort(objects);
+		level.update(objects,rag_doll,map); //hacemos un update de los ‡rboles mu–eco y mapa
+		Collections.sort(objects); //ordenamos los objetos
 	}
 	
 	public void checkRagdollCover(){
@@ -157,9 +169,23 @@ public class World {
 	
 	public void dispose(){
 		//limpiamos todos los objetos
-		for(int i=0; i !=World.objects.size(); i++){
+		for(int i=0; i !=objects.size(); i++){
 			objects.get(i).dispose();
 		}
+		for(int i=0; i !=initialobjects.size();i++){
+			initialobjects.get(i).dispose();
+		}
+		for(int i=0; i !=shaders.size(); i++){
+			shaders.get(i).dispose();
+		}
+	}
+	
+	public static ArrayList<GameObject> objects(){
+		return objects;
+	}
+	
+	public static ArrayList<GameObject> shaders(){
+		return shaders;
 	}
 }
 

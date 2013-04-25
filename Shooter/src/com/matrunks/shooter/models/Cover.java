@@ -7,8 +7,8 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Cover extends GameObject{
 	
-	public TextureAtlas atlas;
 	public AtlasRegion cover;
+	public static TextureAtlas covers = new TextureAtlas(Gdx.files.internal("data/coberturas.atlas"));
 	
 	public Cover(int x, int y){
 		this.position=new Vector3 (x,y,0);
@@ -17,8 +17,7 @@ public class Cover extends GameObject{
 		height=340-(int)(y/1.75);
 		width=160-(int)(y/3.5);
 		
-		atlas = new TextureAtlas(Gdx.files.internal("data/coberturas.atlas"));
-		cover = atlas.findRegion("Cobertura");
+		cover = covers.findRegion("Cobertura"); //en un futuro puede haber m‡s tipos de coberuras
 	}
 	
 	public int width(){
@@ -34,6 +33,6 @@ public class Cover extends GameObject{
 	}
 	
 	public void dispose(){
-		atlas.dispose();
+		covers.dispose();
 	}
 }
