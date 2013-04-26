@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Shader extends GameObject{
 	
-	static TextureAtlas shaders = new TextureAtlas(Gdx.files.internal("data/shader.atlas"));
+	public static TextureAtlas shaders = new TextureAtlas(Gdx.files.internal("data/shader.atlas"));
 
 	public Shader (int type, int x, int y){
 		if(type==0){ //nos estamos refiriendo a disparos

@@ -30,7 +30,7 @@ public class Player {
 	}
 	
 	public boolean checkGun(){
-		if(ShotSecs>0.50){
+		if(ShotSecs>0.60){
 			ShotSecs=0;
 			return true;
 		}

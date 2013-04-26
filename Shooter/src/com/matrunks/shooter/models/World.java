@@ -58,22 +58,21 @@ public class World {
 				GameScreen.camera.unproject(GameScreen.touchPoint.set(Gdx.input.getX(), Gdx.input.getY(),0));
 				//obtengo los metros desde los p’xeles gracias a la c‡mara y lo guardo en touchPoint
 
-				//nueva comprobaci—n, si el mu–eco no est‡ en una cobertura
+				//si el mu–eco no est‡ en una cobertura
 				if(!rag_doll.isHidden()){
 						if(hitOnRagDoll(rag_doll)){
 							System.out.println("Hit");
 							rag_doll.damage(10); //le hacemos da–o
 							rag_doll.Freeze();
 							Assets.hit.play();
-						}else{ //si no hemos dado al queco, disparo con shader
-							if(GameScreen.touchPoint.y < map.height()){ //compruebo no dejar marca en el aire
-								shot = new Shader(0, (int)GameScreen.touchPoint.x, (int)GameScreen.touchPoint.y);
-								shaders.add(shot);
 						}
 			    }
-						Assets.disparo.play(0.3f); //sonido de disparo
-			    }
-				
+				//si no hemos dado al queco, disparo con shader
+				if(!hitOnRagDoll(rag_doll) || rag_doll.isHidden() && GameScreen.touchPoint.y < map.height()){ //compruebo no dejar marca en el aire
+						shot = new Shader(0, (int)GameScreen.touchPoint.x, (int)GameScreen.touchPoint.y);
+						shaders.add(shot);
+				}
+				Assets.disparo.play(0.3f); //sonido de disparo	
 			}
 		}
 		
