@@ -68,7 +68,7 @@ public class World {
 						}
 			    }
 				//si no hemos dado al queco, disparo con shader
-				if(!hitOnRagDoll(rag_doll) || rag_doll.isHidden() && GameScreen.touchPoint.y < map.height()){ //compruebo no dejar marca en el aire
+				if((!hitOnRagDoll(rag_doll) || rag_doll.isHidden()) && GameScreen.touchPoint.y < map.height()){ //compruebo no dejar marca en el aire
 						shot = new Shader(0, (int)GameScreen.touchPoint.x, (int)GameScreen.touchPoint.y);
 						shaders.add(shot);
 				}
