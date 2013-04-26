@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array.ArrayIterator;
 import com.matrunks.shooter.Assets;
 import com.matrunks.shooter.models.Shader;
+import com.matrunks.shooter.models.Weapon;
 import com.matrunks.shooter.models.World;
 
 public class GameScreen implements Screen{
@@ -53,18 +54,22 @@ public class GameScreen implements Screen{
 		batch.enableBlending();
 		batch.begin();
 		
+		//Mostramos los objetos
 		for(int i=0; i !=World.objects.size(); i++){
-			batch.draw(World.objects().get(i).image(),World.objects().get(i).position.x, World.objects().get(i).position.y,World.objects().get(i).width,World.objects().get(i).height);
+			batch.draw(World.objects().get(i).image(),World.objects().get(i).position.x, World.objects().get(i).position.y,World.objects().get(i).width(),World.objects().get(i).height());
 		}
-		
+		//Mostramos los shaders
 		for(int i=0; i !=World.shaders.size(); i++){
-			batch.draw(World.shaders().get(i).image(),World.shaders().get(i).position.x, World.shaders().get(i).position.y,World.shaders().get(i).width,World.shaders().get(i).height);
+			batch.draw(World.shaders().get(i).image(),World.shaders().get(i).position.x, World.shaders().get(i).position.y,World.shaders().get(i).width(),World.shaders().get(i).height());
 		}
+		//Mostramos las balas del arma
+		
 		
 		white.draw(batch, "Jugador: "+world.pj.health(), 1000, 750);
 		white.draw(batch, "Agapito: "+world.rag_doll.health(), 1000, 700);
 		white.draw(batch, "Nivel: "+world.level.getLevel(), 1000, 650);
 		white.draw(batch, "Record: "+world.level.getRecord(), 1000,600);
+		white.draw(batch, "SMGAmmo: "+world.smg.ammo(),1000,550);
 		
 		batch.end();
 	}

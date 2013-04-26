@@ -20,6 +20,8 @@ public class World {
 	public static LevelManager level;
 	public static Map map;
 	public static Collisions collisions;
+	public static Gun gun;
+	public static SubMachineGun smg;
 	public float ShotSecs=0;
 	public float RagdollReloadSecs=0;
 	public static Cover cover;
@@ -27,17 +29,27 @@ public class World {
 	public static ArrayList<GameObject> objects;
 	public static ArrayList<GameObject> initialobjects;
 	public static ArrayList<GameObject> shaders;
+	private BoundingBox gunBox;
+	private BoundingBox smgBox;
 	public Shader shot;
 	private MathUtils math;
 	private boolean bool=false;
 	
 	public World(){
 		level = new LevelManager();
+		pj = new Player();
 		rag_doll = new RagDoll();
 		objects = new ArrayList<GameObject>();
 		initialobjects = new ArrayList<GameObject>();
 		shaders = new ArrayList<GameObject>();
 		map = new Map();
+		gunBox = new BoundingBox(new Vector3(0,600,0), new Vector3(149,700,0));
+		smgBox = new BoundingBox(new Vector3(150,600,0), new Vector3(300,700,0));
+		gun = new Gun();
+		smg = new SubMachineGun();
+		initialobjects.add(gun);
+		initialobjects.add(smg);
+		pj.weapon(gun);
 		for(int i=0;i<13;i++){
 			cover = new Cover(math.random(-50,map.width()),math.random(0,map.height()));
 			initialobjects.add(cover);
@@ -53,18 +65,23 @@ public class World {
 		
 		//aqui metemos los cambios efectuados en los objetos
 		if(Gdx.input.isTouched()){ //si es pulsada la pantalla
-			if(pj.checkGun()){//Comprobamos el enfriamiento del arma
-				//la c‡mara proyecta la imagen a escala de la pantalla f’sica
-				GameScreen.camera.unproject(GameScreen.touchPoint.set(Gdx.input.getX(), Gdx.input.getY(),0));
-				//obtengo los metros desde los p’xeles gracias a la c‡mara y lo guardo en touchPoint
+			//la c‡mara proyecta la imagen a escala de la pantalla f’sica
+			GameScreen.camera.unproject(GameScreen.touchPoint.set(Gdx.input.getX(), Gdx.input.getY(),0));
+			//obtengo los metros desde los p’xeles gracias a la c‡mara y lo guardo en touchPoint
+			
+			if(checkWeaponsBox(GameScreen.touchPoint)){
+				//reproducir algœn sonido o algo
+			}
+			else if(pj.checkGun()){//Comprobamos el enfriamiento del arma		
 
 				//si el mu–eco no est‡ en una cobertura
 				if(!rag_doll.isHidden()){
 						if(hitOnRagDoll(rag_doll)){
 							System.out.println("Hit");
-							rag_doll.damage(10); //le hacemos da–o
+							rag_doll.damage(pj.weapon().damage()); //le hacemos da–o tanto como el arma equipada
 							rag_doll.Freeze();
 							Assets.hit.play();
+							pj.weapon().shot(); //descontamos la bala del cargador
 						}
 			    }
 				//si no hemos dado al queco, disparo con shader
@@ -90,16 +107,18 @@ public class World {
 			rag_doll.NotReady();
 		}
 		
-		//si muere aumentamos el nivel
+		//si muere el queco aumentamos el nivel
 		if(!rag_doll.isAlive()){
 			Assets.dead.play();
 			level.setRecord();
+			pj.initialize(); //inicializamos la vida del jugador
 			initialize();
 		}
 		
 		//si muere el jugador, reiniciamos el nivel
 		if(!pj.isAlive()){
 			level.reset();
+			pj.reset(); //reseteamos al jugador, le damos otra vez municion
 			objects = (ArrayList<GameObject>) initialobjects.clone(); //necesitamos los objetos como al principio
 			initialize();
 		}
@@ -114,7 +133,6 @@ public class World {
 	public void initialize(){
 		shaders.clear();
 		level.incrementLevel(); //se incrementa el nivel ya que level empieza en 0
-		pj = new Player();
 		rag_doll.reset();
 		level.update(objects,rag_doll,map); //hacemos un update de los ‡rboles mu–eco y mapa
 		Collections.sort(objects); //ordenamos los objetos
@@ -185,6 +203,18 @@ public class World {
 	
 	public static ArrayList<GameObject> shaders(){
 		return shaders;
+	}
+	
+	public boolean checkWeaponsBox(Vector3 touchPoint){
+		if(gunBox.contains(touchPoint)){ //si hemos tocado la caja de la pistola
+			pj.weapon(gun);
+			return true;
+		}
+		else if(smgBox.contains(touchPoint)){ //si hemos tocado la caja del smg
+			pj.weapon(smg);
+			return true;
+		}
+		return false;
 	}
 }
 

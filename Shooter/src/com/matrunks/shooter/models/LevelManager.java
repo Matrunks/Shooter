@@ -33,6 +33,14 @@ public class LevelManager {
 				objects.add(cover);
 			}
 		}
+		
+		//A–adimos recompensas de munici—n
+		if(level<10){
+			World.smg.addAmmo(5);
+		}
+		else {
+			World.smg.addAmmo(10);
+		}
 			
 		objects.add(rag_doll);	
 	}
