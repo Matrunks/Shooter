@@ -1,18 +1,20 @@
 package com.matrunks.shooter.models;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net.HttpMethods;
+import com.badlogic.gdx.Net.HttpRequest;
+import com.badlogic.gdx.Net.HttpResponse;
+import com.badlogic.gdx.Net.HttpResponseListener;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import com.matrunks.shooter.models.RagDoll;
+import com.badlogic.gdx.net.HttpParametersUtils;
 import com.matrunks.shooter.Assets;
 import com.matrunks.shooter.screens.GameScreen;
-import com.badlogic.gdx.math.MathUtils;
-import java.lang.Math;
-
-import java.util.Collections;
 
 public class World {
 	public static RagDoll rag_doll;
@@ -93,12 +95,12 @@ public class World {
 			}
 		}
 		
-		//actualizamos los datos del mu–eco y personaje
+		//actualizamos los datos del muï¿½eco y personaje
 		rag_doll.update(delta);
 		pj.update(delta);
 		collisions.update(rag_doll,map);
 		
-		//Si est‡ listo y no est‡ escondido, disparar‡
+		//Si estï¿½ listo y no estï¿½ escondido, dispararï¿½
 		if(rag_doll.isReady() && !rag_doll.isHidden()){
 			Assets.pium.play();
 			Gdx.input.vibrate(500);
@@ -115,15 +117,18 @@ public class World {
 			initialize();
 		}
 		
-		//si muere el jugador, reiniciamos el nivel
+		//si muere el jugador, pedimos puntuaci—n y reiniciamos el nivel
 		if(!pj.isAlive()){
+			TextInput listener = new TextInput (level.getRecord ());
+			Gdx.input.getTextInput(listener, "Introduce tu nombre", "");
+			
 			level.reset();
 			pj.reset(); //reseteamos al jugador, le damos otra vez municion
 			objects = (ArrayList<GameObject>) initialobjects.clone(); //necesitamos los objetos como al principio
 			initialize();
 		}
 		
-		//Comprobamos donde se encuentra el mu–eco y si est‡ tras cobertura cambiamos su estado
+		//Comprobamos donde se encuentra el muï¿½eco y si estï¿½ tras cobertura cambiamos su estado
 		checkRagdollCover();
 		
 		//Reordenamos los objetos del juego
@@ -134,7 +139,7 @@ public class World {
 		shaders.clear();
 		level.incrementLevel(); //se incrementa el nivel ya que level empieza en 0
 		rag_doll.reset();
-		level.update(objects,rag_doll,map); //hacemos un update de los ‡rboles mu–eco y mapa
+		level.update(objects,rag_doll,map); //hacemos un update de los ï¿½rboles muï¿½eco y mapa
 		Collections.sort(objects); //ordenamos los objetos
 	}
 	
@@ -165,12 +170,12 @@ public class World {
 		return (hitOnObject(GameScreen.touchPoint,ragdoll.position.x-30, ragdoll.position.y-30,ragdoll.width()+60, ragdoll.height()+60));
 	}
 	
-	//actualmente no se usa esta funci—n
+	//actualmente no se usa esta funciï¿½n
 	/*public boolean hitOnCovers(ArrayList<GameObject> objects){
 		for(int i=0; i!=objects.size();i++){ //le sumo y resto ya que el arbol por los laterales tiene partes traspasables
 			if(objects.get(i)!=rag_doll){
 				if(hitOnObject(GameScreen.touchPoint,objects.get(i).position.x+30, objects.get(i).position.y, objects.get(i).width-60, objects.get(i).height)){
-					//en este if comprobamos si el mu–eco y el arbol est‡n en la misma x, evaluamos la y, si el mu–eco est‡ por debajo del arbol devolvemos false (la covertura no le cubre)
+					//en este if comprobamos si el muï¿½eco y el arbol estï¿½n en la misma x, evaluamos la y, si el muï¿½eco estï¿½ por debajo del arbol devolvemos false (la covertura no le cubre)
 					if(rag_doll.position.x > objects.get(i).position.x && rag_doll.position.x < objects.get(i).position.x + objects.get(i).width && rag_doll.position.y < objects.get(i).position.y){
 						return false;
 					}

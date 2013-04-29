@@ -1,15 +1,27 @@
 package com.matrunks.shooter.screens;
 
 import com.badlogic.gdx.Game;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Net.HttpMethods;
+import com.badlogic.gdx.Net.HttpRequest;
+import com.badlogic.gdx.Net.HttpResponse;
+import com.badlogic.gdx.Net.HttpResponseListener;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.net.HttpParametersUtils;
+import com.badlogic.gdx.utils.Json;
 import com.matrunks.shooter.Assets;
 import com.matrunks.shooter.ShooterGame;
+
+class Aplayer
+{
+	public String name, score;
+}
 
 public class MenuScreen implements Screen {
 	private OrthographicCamera camera;
@@ -41,14 +53,14 @@ public class MenuScreen implements Screen {
 	@Override
 	public void render (float delta) {	
 		if(Gdx.input.justTouched()){ //si se ha pulsado la pantalla
-			//la c‡mara proyecta la imagen a escala de la pantalla f’sica
+			//la cï¿½mara proyecta la imagen a escala de la pantalla fï¿½sica
 			camera.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(),0));
-			//obtengo los metros desde los p’xeles gracias a la c‡mara y lo guardo en touchPoint
+			//obtengo los metros desde los pï¿½xeles gracias a la cï¿½mara y lo guardo en touchPoint
 			
-			if(salirBox.contains(touchPoint)){//si el rect‡ngulo pulsado contiene las
-				//coordenadas del touchPoint, es que he tocado el bot—n start
+			if(salirBox.contains(touchPoint)){//si el rectï¿½ngulo pulsado contiene las
+				//coordenadas del touchPoint, es que he tocado el botï¿½n start
 				System.out.println("Salir");
-				Assets.dispose();//para que dejemos de dibujar y no siga ejecutandose Žsta pantalla
+				Assets.dispose();//para que dejemos de dibujar y no siga ejecutandose ï¿½sta pantalla
 				Gdx.app.exit();
 			}	
 			
