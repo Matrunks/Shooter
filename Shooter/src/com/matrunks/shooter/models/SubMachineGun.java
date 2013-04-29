@@ -28,10 +28,4 @@ public class SubMachineGun extends Weapon{
 		// TODO Auto-generated method stub
 		return 100;
 	}
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		((Disposable) image).dispose();
-	}
 }

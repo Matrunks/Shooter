@@ -70,7 +70,7 @@ public class World {
 			//obtengo los metros desde los p’xeles gracias a la c‡mara y lo guardo en touchPoint
 			
 			if(checkWeaponsBox(GameScreen.touchPoint)){
-				//reproducir algœn sonido o algo
+				//reproducir algœn sonido o algo de cambio de arma
 			}
 			else if(pj.checkGun()){//Comprobamos el enfriamiento del arma		
 
@@ -81,7 +81,6 @@ public class World {
 							rag_doll.damage(pj.weapon().damage()); //le hacemos da–o tanto como el arma equipada
 							rag_doll.Freeze();
 							Assets.hit.play();
-							pj.weapon().shot(); //descontamos la bala del cargador
 						}
 			    }
 				//si no hemos dado al queco, disparo con shader
@@ -89,7 +88,8 @@ public class World {
 						shot = new Shader(0, (int)GameScreen.touchPoint.x, (int)GameScreen.touchPoint.y);
 						shaders.add(shot);
 				}
-				Assets.disparo.play(0.3f); //sonido de disparo	
+				Assets.disparo.play(0.3f); //sonido de disparo
+				pj.weapon().shot(); //descontamos la bala del cargador
 			}
 		}
 		
@@ -213,6 +213,9 @@ public class World {
 		else if(smgBox.contains(touchPoint)){ //si hemos tocado la caja del smg
 			pj.weapon(smg);
 			return true;
+		}
+		else if(!(pj.weapon()==gun) && pj.weapon().ammo()==0){ //Si tenemos un arma diferente a la pistola, y no tenemos balas de otras cambiamos directamente a pistola
+			pj.weapon(gun); //hacemos el cambio
 		}
 		return false;
 	}

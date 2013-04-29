@@ -64,7 +64,6 @@ public class GameScreen implements Screen{
 		}
 		//Mostramos las balas del arma
 		
-		
 		white.draw(batch, "Jugador: "+world.pj.health(), 1000, 750);
 		white.draw(batch, "Agapito: "+world.rag_doll.health(), 1000, 700);
 		white.draw(batch, "Nivel: "+world.level.getLevel(), 1000, 650);

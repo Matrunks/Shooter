@@ -40,5 +40,7 @@ public abstract class Weapon extends GameObject {
 	public float reloadsecs(){
 		return reloadsecs;
 	}
-	
+	public void dispose(){
+		weapons.dispose();
+	}
 }

@@ -29,9 +29,4 @@ public class Gun extends Weapon{
 		return 100;
 	}
 
-	@Override
-	public void dispose() {
-		((Disposable) image).dispose();
-	}
-
 }
