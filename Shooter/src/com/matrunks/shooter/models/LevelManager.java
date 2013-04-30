@@ -17,7 +17,7 @@ public class LevelManager {
 		initialize();
 	}
 	
-	public void update(ArrayList<GameObject> objects,RagDoll rag_doll, Map map){
+	public void update(ArrayList<GameObject> objects,RagDoll rag_doll, Map map, Weapon smg){
 		rag_doll.setDamage(10);
 		
 		rag_doll.setMaxX(level*75+minx);
@@ -36,10 +36,10 @@ public class LevelManager {
 		
 		//A–adimos recompensas de munici—n
 		if(level<10){
-			World.smg.addAmmo(5);
+			smg.addAmmo(5);
 		}
 		else {
-			World.smg.addAmmo(10);
+			smg.addAmmo(10);
 		}
 			
 		objects.add(rag_doll);	

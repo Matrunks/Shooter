@@ -28,35 +28,63 @@ public class World {
 	public float RagdollReloadSecs=0;
 	public static Cover cover;
 	public int indice;
-	public static ArrayList<GameObject> objects;
+	public static ArrayList<GameObject> gameobjects;
 	public static ArrayList<GameObject> initialobjects;
 	public static ArrayList<GameObject> shaders;
+	public static ArrayList<Objects> objects;
 	private BoundingBox gunBox;
 	private BoundingBox smgBox;
+	private BoundingBox quitBox;
 	public Shader shot;
+	public HUD healthHud;
+	public HUD selectorHud;
+	public Lifebar lifeBar;
+	public Bar bar;
 	private MathUtils math;
 	private boolean bool=false;
 	
 	public World(){
+		//Objects
 		level = new LevelManager();
 		pj = new Player();
-		rag_doll = new RagDoll();
-		objects = new ArrayList<GameObject>();
+		healthHud = new HUD(1);
+		selectorHud = new HUD(2);
+		
+		map = new Map();
+		bar = new Bar();
+		lifeBar= new Lifebar();
+		rag_doll = new RagDoll(map);
+		
+		//ArrayLists
+		gameobjects = new ArrayList<GameObject>();
 		initialobjects = new ArrayList<GameObject>();
 		shaders = new ArrayList<GameObject>();
-		map = new Map();
-		gunBox = new BoundingBox(new Vector3(0,600,0), new Vector3(149,700,0));
-		smgBox = new BoundingBox(new Vector3(150,600,0), new Vector3(300,700,0));
+		objects = new ArrayList<Objects>();
+		
+		//Bounding Box
+		gunBox = new BoundingBox(new Vector3(0,0,0), new Vector3(100,95,0));
+		smgBox = new BoundingBox(new Vector3(0,95,0), new Vector3(100,220,0));
+		quitBox = new BoundingBox(new Vector3(0,600,0), new Vector3(80,800,0));
+		
+		//Weapons
 		gun = new Gun();
 		smg = new SubMachineGun();
-		initialobjects.add(gun);
-		initialobjects.add(smg);
+		
+		//Inserciones al arraylist
+		objects.add(gun);
+		objects.add(smg);
+		objects.add(healthHud);
+		objects.add(lifeBar);
+		objects.add(bar);
+		objects.add(selectorHud);
+		
+		Collections.sort(objects);
 		pj.weapon(gun);
 		for(int i=0;i<13;i++){
 			cover = new Cover(math.random(-50,map.width()),math.random(0,map.height()));
 			initialobjects.add(cover);
 		}
-		objects = (ArrayList<GameObject>) initialobjects.clone();
+		gameobjects = (ArrayList<GameObject>) initialobjects.clone();
 		collisions = new Collisions();
 		initialize();
 	}
@@ -92,6 +120,7 @@ public class World {
 				}
 				Assets.disparo.play(0.3f); //sonido de disparo
 				pj.weapon().shot(); //descontamos la bala del cargador
+				bar.setWidth(smg.ammo());
 			}
 		}
 		
@@ -107,6 +136,7 @@ public class World {
 			pj.takeDamage(rag_doll.getDamage());
 			rag_doll.Shoot();
 			rag_doll.NotReady();
+			lifeBar.setWidth(pj.health());
 		}
 		
 		//si muere el queco aumentamos el nivel
@@ -124,7 +154,7 @@ public class World {
 			
 			level.reset();
 			pj.reset(); //reseteamos al jugador, le damos otra vez municion
-			objects = (ArrayList<GameObject>) initialobjects.clone(); //necesitamos los objetos como al principio
+			gameobjects = (ArrayList<GameObject>) initialobjects.clone(); //necesitamos los objetos como al principio
 			initialize();
 		}
 		
@@ -132,21 +162,23 @@ public class World {
 		checkRagdollCover();
 		
 		//Reordenamos los objetos del juego
-		Collections.sort(objects);
+		Collections.sort(gameobjects);
 	}
 	
 	public void initialize(){
+		lifeBar.setWidth(100);
 		shaders.clear();
 		level.incrementLevel(); //se incrementa el nivel ya que level empieza en 0
 		rag_doll.reset();
-		level.update(objects,rag_doll,map); //hacemos un update de los �rboles mu�eco y mapa
-		Collections.sort(objects); //ordenamos los objetos
+		level.update(gameobjects,rag_doll,map,smg); //hacemos un update de los �rboles mu�eco y mapa
+		bar.setWidth(smg.ammo());
+		Collections.sort(gameobjects); //ordenamos los objetos
 	}
 	
 	public void checkRagdollCover(){
 		bool=false;
-		for(int i=0; i!=objects.size();i++){ //le sumo y resto ya que el arbol por los laterales tiene partes traspasables
-			if(rag_doll.position.x > objects.get(i).position.x && rag_doll.position.x+rag_doll.width < objects.get(i).position.x+objects.get(i).width+5 && rag_doll.position.y < objects.get(i).position.y+objects.get(i).height+5 && rag_doll.position.y+5 > objects.get(i).position.y){
+		for(int i=0; i!=gameobjects.size();i++){ //le sumo y resto ya que el arbol por los laterales tiene partes traspasables
+			if(rag_doll.position.x > gameobjects.get(i).position.x && rag_doll.position.x+rag_doll.width < gameobjects.get(i).position.x+gameobjects.get(i).width+5 && rag_doll.position.y < gameobjects.get(i).position.y+gameobjects.get(i).height+5 && rag_doll.position.y+5 > gameobjects.get(i).position.y){
 				if(!rag_doll.isHidden()){
 					rag_doll.hide();
 				}	
@@ -170,29 +202,10 @@ public class World {
 		return (hitOnObject(GameScreen.touchPoint,ragdoll.position.x-30, ragdoll.position.y-30,ragdoll.width()+60, ragdoll.height()+60));
 	}
 	
-	//actualmente no se usa esta funci�n
-	/*public boolean hitOnCovers(ArrayList<GameObject> objects){
-		for(int i=0; i!=objects.size();i++){ //le sumo y resto ya que el arbol por los laterales tiene partes traspasables
-			if(objects.get(i)!=rag_doll){
-				if(hitOnObject(GameScreen.touchPoint,objects.get(i).position.x+30, objects.get(i).position.y, objects.get(i).width-60, objects.get(i).height)){
-					//en este if comprobamos si el mu�eco y el arbol est�n en la misma x, evaluamos la y, si el mu�eco est� por debajo del arbol devolvemos false (la covertura no le cubre)
-					if(rag_doll.position.x > objects.get(i).position.x && rag_doll.position.x < objects.get(i).position.x + objects.get(i).width && rag_doll.position.y < objects.get(i).position.y){
-						return false;
-					}
-					else{
-						System.out.println("Cover");
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}*/
-	
 	public void dispose(){
 		//limpiamos todos los objetos
-		for(int i=0; i !=objects.size(); i++){
-			objects.get(i).dispose();
+		for(int i=0; i !=gameobjects.size(); i++){
+			gameobjects.get(i).dispose();
 		}
 		for(int i=0; i !=initialobjects.size();i++){
 			initialobjects.get(i).dispose();
@@ -202,25 +215,35 @@ public class World {
 		}
 	}
 	
-	public static ArrayList<GameObject> objects(){
-		return objects;
+	public static ArrayList<GameObject> gameobjects(){
+		return gameobjects;
 	}
 	
 	public static ArrayList<GameObject> shaders(){
 		return shaders;
 	}
 	
+	public static ArrayList<Objects> objects(){
+		return objects;
+	}
+	
 	public boolean checkWeaponsBox(Vector3 touchPoint){
 		if(gunBox.contains(touchPoint)){ //si hemos tocado la caja de la pistola
 			pj.weapon(gun);
+			selectorHud.setY(-5);
 			return true;
 		}
 		else if(smgBox.contains(touchPoint)){ //si hemos tocado la caja del smg
 			pj.weapon(smg);
+			selectorHud.setY(100);
 			return true;
 		}
 		else if(!(pj.weapon()==gun) && pj.weapon().ammo()==0){ //Si tenemos un arma diferente a la pistola, y no tenemos balas de otras cambiamos directamente a pistola
 			pj.weapon(gun); //hacemos el cambio
+			selectorHud.setY(-5);
+		}
+		else if(quitBox.contains(touchPoint)){
+			
 		}
 		return false;
 	}

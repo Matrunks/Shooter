@@ -7,11 +7,12 @@ import com.badlogic.gdx.utils.Disposable;
 public class SubMachineGun extends Weapon{
 	
 	public SubMachineGun(){
-		position = new Vector3(200,600,0);
-		image = weapons.findRegion("Smg");
+		position = new Vector3(-10,110,1);
+		image = weapons.findRegion("SMG");
 		readysecs=(float) 0.10;
 		damage=5;
-		ammo=30;
+		ammo=25;
+		maxammo=60;
 	}
 
 	@Override
@@ -20,12 +21,13 @@ public class SubMachineGun extends Weapon{
 	}
 
 	public int width(){
-		return 150;
+		return 110;
 	}
 
 	@Override
 	public int height() {
 		// TODO Auto-generated method stub
-		return 100;
+		return 90;
 	}
+
 }

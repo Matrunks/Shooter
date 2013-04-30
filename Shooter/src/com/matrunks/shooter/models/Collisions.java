@@ -2,6 +2,8 @@ package com.matrunks.shooter.models;
 
 public class Collisions {
 
+	
+	
 	public Collisions (){
 		
 	}
@@ -13,8 +15,8 @@ public class Collisions {
 					rag_doll.setX(map.width()-rag_doll.width);
 					rag_doll.changeDirectionX();
 				}
-				if(rag_doll.getX() < 0){
-					rag_doll.setX(0);
+				if(rag_doll.getX() < map.minX()){
+					rag_doll.setX(map.minX());
 					rag_doll.changeDirectionX();
 				}
 				if(rag_doll.getY() > map.height()){

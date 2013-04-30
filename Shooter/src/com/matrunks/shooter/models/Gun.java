@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Disposable;
 public class Gun extends Weapon{
 
 	public Gun(){
-		position=new Vector3(0,600,0);
+		position=new Vector3(0,0,1);
 		ammo=-1;
 		image = weapons.findRegion("Pistola");
 		readysecs=(float) 0.60;
@@ -21,12 +21,12 @@ public class Gun extends Weapon{
 
 	@Override
 	public int width() {
-		return 150;
+		return (int)194/2;
 	}
 
 	@Override
 	public int height() {
-		return 100;
+		return (int)157/2;
 	}
 
 }

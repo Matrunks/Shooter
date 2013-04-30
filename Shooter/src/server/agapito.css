@@ -1,0 +1,59 @@
+* {
+	font-family: 'Ewert', cursive;
+	text-align: center;
+	font-size: x-large;
+}
+
+body {
+	background-color: #008eff;
+}
+
+h1 {
+	font-weight: normal;
+	font-size: xx-large;
+}
+
+ol {
+	list-style-position: inside;
+}
+
+img.shot1 {
+	position: fixed;
+	top: 50px;
+	right: 150px;
+}
+
+img.shot2 {
+	position: fixed;
+	top: 350px;
+	right: 350px;
+}
+
+img.shot3 {
+	position: fixed;
+	top: 460px;
+	left: 200px;
+}
+
+img.shot4 {
+	position: fixed;
+	top: 180px;
+	left: 300px;
+}
+
+img.ragdoll {
+	position: fixed;
+	bottom: 0px;
+	right: 150px;
+	z-index: 1;
+}
+
+#terrain {
+	background-color: #007400;
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	height: 20%;
+	width: 100%;
+	display: block;
+}

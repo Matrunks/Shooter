@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 
 
-public abstract class Weapon extends GameObject {
+public abstract class Weapon extends Objects {
 	public int ammo;
 	public int damage;
 	public int maxammo;
@@ -25,7 +25,11 @@ public abstract class Weapon extends GameObject {
 	}
 	
 	public void addAmmo(int ammo){
-		this.ammo+=ammo;
+		if(this.ammo+ammo>maxammo){
+			this.ammo=maxammo;
+		}else{
+			this.ammo+=ammo;
+		}
 	}
 	
 	public float readysecs(){

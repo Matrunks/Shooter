@@ -29,8 +29,10 @@ public class RagDoll extends GameObject{
 	private boolean hidden=false;
 	private boolean shooting=false;
 	private MathUtils math;
+	private Map map;
 	
-	public RagDoll(){
+	public RagDoll(Map map){
+		this.map=map;
 		width=100;
 		height=200;
 		atlas = new TextureAtlas(Gdx.files.internal("data/ragdoll.atlas"));
@@ -45,7 +47,7 @@ public class RagDoll extends GameObject{
 	}
 	
 	public void reset(){
-		position = new Vector3(math.random(0,1200),math.random(0,300),0);
+		position = new Vector3(math.random(map.minX(),map.width()),math.random(0,map.height()),0);
 		hp=100;
 		speed = new Vector3(inicialx,inicialy,0);
 		directionx*=-1;
