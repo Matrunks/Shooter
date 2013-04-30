@@ -1,0 +1,12 @@
+
+coberturas.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Cobertura
+  rotate: false
+  xy: 1, 1
+  size: 160, 340
+  orig: 160, 340
+  offset: 0, 0
+  index: -1

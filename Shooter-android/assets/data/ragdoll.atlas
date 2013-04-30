@@ -1,0 +1,19 @@
+
+ragdoll.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+posture1
+  rotate: false
+  xy: 1, 1
+  size: 100, 200
+  orig: 100, 200
+  offset: 0, 0
+  index: -1
+posture2
+  rotate: false
+  xy: 103, 1
+  size: 100, 200
+  orig: 100, 200
+  offset: 0, 0
+  index: -1
