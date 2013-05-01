@@ -3,6 +3,8 @@ package com.matrunks.shooter.models;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Application.ApplicationType;
+
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.Net.HttpMethods;
 import com.badlogic.gdx.Net.HttpRequest;
@@ -25,22 +27,30 @@ public class TextInput implements TextInputListener
 	}
 	
 	/**
-	 * Este m茅todo se llama despu茅s de que el usuario introduzca su nombre de usuario.
+	 * Este m巘odo se llama despu巗 de que el usuario introduzca su nombre de usuario.
 	 */
 	@Override
 	public void input (String text)
 	{
 		Gdx.app.log ("Input", "Registrado usuario " + text);
 
-		// Enviar puntuaci贸n a servidor.
-		// Los par谩metros HTTP se env铆an a trav茅s de un map (id, valor).
+		// Enviar puntuaci梟 a servidor.
+		// Los par噈etros HTTP se env抋n a trav巗 de un map (id, valor).
 		HashMap<String, String> parameters = new HashMap<String, String> ();
 		parameters.put ("name", text);
 		parameters.put ("score", String.valueOf (level));
+		
+		if (Gdx.app.getType () == ApplicationType.Android)
+		{
+			parameters.put ("platform", "android");
+		} else if (Gdx.app.getType () == ApplicationType.Desktop)
+		{
+			parameters.put ("platform", "desktop");
+		}
 
-		Gdx.app.log ("Puntuacion", "Jugador: " + text + ", puntuaci贸n: " + String.valueOf (level));
+		Gdx.app.log ("Puntuacion", "Jugador: " + text + ", puntuaci梟: " + String.valueOf (level) + ", plataforma: " + Gdx.app.getType ());
 
-		// Petici贸n POST a servidor.
+		// Petici梟 POST a servidor.
 		HttpRequest httpPost = new HttpRequest (HttpMethods.POST);
 		httpPost.setUrl ("http://agapito.jesusrozano.es/rest.php");
 		httpPost.setContent (HttpParametersUtils.convertHttpParameters (parameters));
@@ -53,13 +63,13 @@ public class TextInput implements TextInputListener
 
 			public void failed (Throwable t)
 			{
-				Gdx.app.error ("HTTP", "Error en conexi贸n con servidor." + t.getMessage ());
+				Gdx.app.error ("HTTP", "Error en conexi梟 con servidor." + t.getMessage ());
 			}
 		});
 	}
 
 	/**
-	 * Se llama cuando el usuario hace clic en "Cancelar" en el di谩logo de introducci贸n de nombre.
+	 * Se llama cuando el usuario hace clic en "Cancelar" en el di噇ogo de introducci梟 de nombre.
 	 */
 	@Override
 	public void canceled ()
