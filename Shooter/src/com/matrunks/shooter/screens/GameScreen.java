@@ -49,6 +49,8 @@ public class GameScreen implements Screen{
 		
 		camera.update();
 		
+		System.out.println("[CAMERA] "+ Gdx.graphics.getWidth()+ " " + Gdx.graphics.getHeight());
+		
 		batch.setProjectionMatrix(camera.combined);
 		batch.disableBlending();
 		batch.begin();
@@ -63,6 +65,7 @@ public class GameScreen implements Screen{
 		for(int i=0; i !=World.gameobjects().size(); i++){
 			batch.draw(World.gameobjects().get(i).image(),World.gameobjects().get(i).position.x, World.gameobjects().get(i).position.y,World.gameobjects().get(i).width(),World.gameobjects().get(i).height());
 		}
+		
 		//Mostramos los shaders
 		for(int i=0; i !=World.shaders.size(); i++){
 			batch.draw(World.shaders().get(i).image(),World.shaders().get(i).position.x, World.shaders().get(i).position.y,World.shaders().get(i).width(),World.shaders().get(i).height());
@@ -74,11 +77,7 @@ public class GameScreen implements Screen{
 		}
 		//Mostramos las balas del arma
 		
-		//white.draw(batch, "Jugador: "+world.pj.health(), 1000, 750);
-		//white.draw(batch, "Agapito: "+world.rag_doll.health(), 1000, 700);
 		white.draw(batch, ""+world.level.getLevel(), 180, 688);
-		//white.draw(batch, "Record: "+world.level.getRecord(), 1000,600);
-		//white.draw(batch, "SMGAmmo: "+world.smg.ammo(),1000,550);
 		
 		batch.end();
 		

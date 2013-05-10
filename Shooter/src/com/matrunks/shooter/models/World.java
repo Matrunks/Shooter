@@ -152,6 +152,7 @@ public class World {
 			TextInput listener = new TextInput (level.getRecord ());
 			Gdx.input.getTextInput(listener, "Introduce tu nombre", "");
 			
+			smg.reset();
 			level.reset();
 			pj.reset(); //reseteamos al jugador, le damos otra vez municion
 			gameobjects = (ArrayList<GameObject>) initialobjects.clone(); //necesitamos los objetos como al principio

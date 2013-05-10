@@ -6,6 +6,7 @@ public class Collisions {
 	
 	public Collisions (){
 		
+		
 	}
 	
 	//comprueba las colisiones del momento y modifica los par‡metros

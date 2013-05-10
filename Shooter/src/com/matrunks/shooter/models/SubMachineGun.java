@@ -14,6 +14,10 @@ public class SubMachineGun extends Weapon{
 		ammo=25;
 		maxammo=60;
 	}
+	
+	public void reset(){
+		ammo=25;
+	}
 
 	@Override
 	public AtlasRegion image() {
