@@ -9,6 +9,10 @@ public abstract class GameObject implements Comparable<GameObject>{
 	public int height;
 	public AtlasRegion image;
 	
+	public Vector3 position(){
+		return position;
+	}
+	
 	public abstract AtlasRegion image();
 	
 	public abstract int width();

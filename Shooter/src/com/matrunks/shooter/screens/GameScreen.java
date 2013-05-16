@@ -32,8 +32,8 @@ public class GameScreen implements Screen{
 		touchPoint= new Vector3();
 		
 		camera = new OrthographicCamera(1280,800); //metros, cuadrados, cogemos toda la pantalla
-		camera.position.set(1280/2f, 800/2f, 0); //la camara mirar‡ a la mitad de la pantalla, z=0
-		batch = new SpriteBatch(); //ocupa mucha memoria, debe de tenerse uno m‡ximo por pantalla
+		camera.position.set(1280/2f, 800/2f, 0); //la camara mirarï¿½ a la mitad de la pantalla, z=0
+		batch = new SpriteBatch(); //ocupa mucha memoria, debe de tenerse uno mï¿½ximo por pantalla
 		sr = new ShapeRenderer();
 		sr.setColor(Color.YELLOW);
 	}
@@ -49,7 +49,7 @@ public class GameScreen implements Screen{
 		
 		camera.update();
 		
-		System.out.println("[CAMERA] "+ Gdx.graphics.getWidth()+ " " + Gdx.graphics.getHeight());
+		//System.out.println("[CAMERA] "+ Gdx.graphics.getWidth()+ " " + Gdx.graphics.getHeight());
 		
 		batch.setProjectionMatrix(camera.combined);
 		batch.disableBlending();
@@ -82,7 +82,7 @@ public class GameScreen implements Screen{
 		batch.end();
 		
 		
-		// Con este c—digo puedo ver la caja de agapito
+		// Con este cï¿½digo puedo ver la caja de agapito
 		/*sr.setProjectionMatrix(camera.combined);
 		sr.begin(ShapeType.Line);
 		sr.rect(world.rag_doll.position.x-30, world.rag_doll.position.y-30, world.rag_doll.width+60, world.rag_doll.height+60);

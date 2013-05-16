@@ -26,15 +26,15 @@ public class LevelManager {
 		rag_doll.setInicialX(minx+level*3);
 		rag_doll.setInicialY(miny+level*3);
 		
-		if(level!=1){
+		if(level!=1 && objects.size()<22){
 			for(int i=0;i<1;i++){
-				//los ‡rboles salen en posiciones aleatorias
+				//los ï¿½rboles salen en posiciones aleatorias
 				cover = new Cover(math.random(-50,map.width()),math.random(0,map.height()));
 				objects.add(cover);
 			}
 		}
 		
-		//A–adimos recompensas de munici—n
+		//Aï¿½adimos recompensas de municiï¿½n
 		if(level<10){
 			smg.addAmmo(5);
 		}

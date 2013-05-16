@@ -30,7 +30,7 @@ public class World {
 	public int indice;
 	public static ArrayList<GameObject> gameobjects;
 	public static ArrayList<GameObject> initialobjects;
-	public static ArrayList<GameObject> shaders;
+	public static ArrayList<Shader> shaders;
 	public static ArrayList<Objects> objects;
 	private BoundingBox gunBox;
 	private BoundingBox smgBox;
@@ -50,6 +50,7 @@ public class World {
 		healthHud = new HUD(1);
 		selectorHud = new HUD(2);
 		
+		//Creating others objects
 		map = new Map();
 		bar = new Bar();
 		lifeBar= new Lifebar();
@@ -58,7 +59,7 @@ public class World {
 		//ArrayLists
 		gameobjects = new ArrayList<GameObject>();
 		initialobjects = new ArrayList<GameObject>();
-		shaders = new ArrayList<GameObject>();
+		shaders = new ArrayList<Shader>();
 		objects = new ArrayList<Objects>();
 		
 		//Bounding Box
@@ -77,8 +78,8 @@ public class World {
 		objects.add(lifeBar);
 		objects.add(bar);
 		objects.add(selectorHud);
-		
 		Collections.sort(objects);
+		
 		pj.weapon(gun);
 		for(int i=0;i<13;i++){
 			cover = new Cover(math.random(-50,map.width()),math.random(0,map.height()));
@@ -95,22 +96,34 @@ public class World {
 		
 		//aqui metemos los cambios efectuados en los objetos
 		if(Gdx.input.isTouched()){ //si es pulsada la pantalla
-			//la c‡mara proyecta la imagen a escala de la pantalla f’sica
+			//la cï¿½mara proyecta la imagen a escala de la pantalla fï¿½sica
 			GameScreen.camera.unproject(GameScreen.touchPoint.set(Gdx.input.getX(), Gdx.input.getY(),0));
-			//obtengo los metros desde los p’xeles gracias a la c‡mara y lo guardo en touchPoint
+			//obtengo los metros desde los pï¿½xeles gracias a la cï¿½mara y lo guardo en touchPoint
 			
 			if(checkWeaponsBox(GameScreen.touchPoint)){
-				//reproducir algœn sonido o algo de cambio de arma
+				//reproducir algï¿½n sonido o algo de cambio de arma
 			}
 			else if(pj.checkGun()){//Comprobamos el enfriamiento del arma		
 
-				//si el mu–eco no est‡ en una cobertura
+				//si el muï¿½eco no estï¿½ en una cobertura
 				if(!rag_doll.isHidden()){
 						if(hitOnRagDoll(rag_doll)){
 							System.out.println("Hit");
-							rag_doll.damage(pj.weapon().damage()); //le hacemos da–o tanto como el arma equipada
+							rag_doll.damage(pj.weapon().damage()); //le hacemos daï¿½o tanto como el arma equipada
 							rag_doll.Freeze();
 							Assets.hit.play();
+						}else{ //si damos a un arbol
+							Cover c=hitOnCovers(gameobjects);
+							if(c!=null){
+								c.damage(pj.weapon().damage());
+								if(c.health()<=0){
+									//Quitamos los impactos de bala que estÃ©n ahÃ­
+									removeShaders(c.position(), c.width(), c.height());
+									gameobjects.remove(c);
+									//TODO add sound
+									Collections.sort(gameobjects);
+								}
+							}
 						}
 			    }
 				//si no hemos dado al queco, disparo con shader
@@ -147,7 +160,7 @@ public class World {
 			initialize();
 		}
 		
-		//si muere el jugador, pedimos puntuaci—n y reiniciamos el nivel
+		//si muere el jugador, pedimos puntuaciï¿½n y reiniciamos el nivel
 		if(!pj.isAlive()){
 			TextInput listener = new TextInput (level.getRecord ());
 			Gdx.input.getTextInput(listener, "Introduce tu nombre", "");
@@ -192,6 +205,24 @@ public class World {
 		}
 	}
 	
+	public Cover hitOnCovers(ArrayList<GameObject> objects){
+		for(int i=0; i!=objects.size();i++){ 
+			if(objects.get(i)!=rag_doll){ //le sumo y resto ya que el arbol por los laterales tiene partes traspasables
+				if(hitOnObject(GameScreen.touchPoint,objects.get(i).position.x+30, objects.get(i).position.y, objects.get(i).width-60, objects.get(i).height)){
+					//en este if comprobamos si el muâ€“eco y el arbol estâ€¡n en la misma x, evaluamos la y, si el muâ€“eco estâ€¡ por debajo del arbol devolvemos false (la covertura no le cubre)
+					if(rag_doll.position.x > objects.get(i).position.x && rag_doll.position.x < objects.get(i).position.x + objects.get(i).width && rag_doll.position.y < objects.get(i).position.y){
+						return null;
+					}
+					else{
+						System.out.println("Cover");
+						return (Cover) objects.get(i);
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
 	public boolean hitOnObject(Vector3 touchPoint, float x, float y, int width, int height){
 		if(touchPoint.x > x && touchPoint.x < x +width && touchPoint.y > y && touchPoint.y < y+height){
 			return true;
@@ -220,7 +251,7 @@ public class World {
 		return gameobjects;
 	}
 	
-	public static ArrayList<GameObject> shaders(){
+	public static ArrayList<Shader> shaders(){
 		return shaders;
 	}
 	
@@ -248,6 +279,20 @@ public class World {
 		}
 		return false;
 	}
-}
 
+	public void removeShaders(Vector3 position, int width, int height){
+		
+		for(int i=0; i < shaders.size(); i++){
+			Shader s= shaders.get(i);
+			System.out.println(shaders.size());
+			if(s.position().x <= position.x+width && s.position().x >= position.x && s.position().y <= position.y + height && s.position().y >= position.y){
+				System.out.println(shaders.size());
+				shaders.remove(i);
+				//Collections.sort(shaders);
+				i=0;
+			}
+		}
+	}
+
+}
 

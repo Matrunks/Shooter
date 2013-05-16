@@ -52,7 +52,6 @@ public class MenuScreen implements Screen {
 
 	@Override
 	public void render (float delta) {	
-		System.out.println("[CAMERA] "+ Gdx.graphics.getWidth()+ " " + Gdx.graphics.getHeight());
 		if(Gdx.input.justTouched()){ //si se ha pulsado la pantalla
 			//la c�mara proyecta la imagen a escala de la pantalla f�sica
 			camera.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(),0));
