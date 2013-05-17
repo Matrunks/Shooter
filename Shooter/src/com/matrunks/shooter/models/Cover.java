@@ -9,7 +9,7 @@ public class Cover extends GameObject{
 	
 	public AtlasRegion cover;
 	public static TextureAtlas covers = new TextureAtlas(Gdx.files.internal("data/coberturas.atlas"));
-	public int hp=100;
+	public int hp=70;
 	
 	public Cover(int x, int y){
 		this.position=new Vector3 (x,y,0);

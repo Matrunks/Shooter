@@ -41,6 +41,7 @@ public class World {
 	public Lifebar lifeBar;
 	public Bar bar;
 	private MathUtils math;
+	private boolean turn=false;
 	private boolean bool=false;
 	
 	public World(){
@@ -65,7 +66,6 @@ public class World {
 		//Bounding Box
 		gunBox = new BoundingBox(new Vector3(0,0,0), new Vector3(100,95,0));
 		smgBox = new BoundingBox(new Vector3(0,95,0), new Vector3(100,220,0));
-		quitBox = new BoundingBox(new Vector3(0,600,0), new Vector3(80,800,0));
 		
 		//Weapons
 		gun = new Gun();
@@ -112,28 +112,32 @@ public class World {
 							rag_doll.damage(pj.weapon().damage()); //le hacemos da�o tanto como el arma equipada
 							rag_doll.Freeze();
 							Assets.hit.play();
-						}else{ //si damos a un arbol
-							Cover c=hitOnCovers(gameobjects);
-							if(c!=null){
-								c.damage(pj.weapon().damage());
-								if(c.health()<=0){
-									//Quitamos los impactos de bala que estén ahí
-									removeShaders(c.position(), c.width(), c.height());
-									gameobjects.remove(c);
-									//TODO add sound
-									Collections.sort(gameobjects);
-								}
-							}
+							turn=true;
 						}
 			    }
+				if(turn == false){
+					Cover c=hitOnCovers(gameobjects);
+					if(c!=null){
+						c.damage(pj.weapon().damage());
+						if(c.health()<=0){
+							//Quitamos los impactos de bala que estén ahí
+							removeShaders(c.position(), c.width(), c.height());
+							gameobjects.remove(c);
+							//TODO add sound
+							Collections.sort(gameobjects);
+						}
+					}
+				}
+				
 				//si no hemos dado al queco, disparo con shader
-				if((!hitOnRagDoll(rag_doll) || rag_doll.isHidden()) && GameScreen.touchPoint.y < map.height()){ //compruebo no dejar marca en el aire
+				if(turn==false && GameScreen.touchPoint.y < map.height()){ //compruebo no dejar marca en el aire
 						shot = new Shader(0, (int)GameScreen.touchPoint.x, (int)GameScreen.touchPoint.y);
 						shaders.add(shot);
 				}
 				Assets.disparo.play(0.3f); //sonido de disparo
 				pj.weapon().shot(); //descontamos la bala del cargador
 				bar.setWidth(smg.ammo());
+				turn=false;
 			}
 		}
 		
@@ -274,9 +278,6 @@ public class World {
 			pj.weapon(gun); //hacemos el cambio
 			selectorHud.setY(-5);
 		}
-		else if(quitBox.contains(touchPoint)){
-			
-		}
 		return false;
 	}
 
@@ -284,9 +285,7 @@ public class World {
 		
 		for(int i=0; i < shaders.size(); i++){
 			Shader s= shaders.get(i);
-			System.out.println(shaders.size());
 			if(s.position().x <= position.x+width && s.position().x >= position.x && s.position().y <= position.y + height && s.position().y >= position.y){
-				System.out.println(shaders.size());
 				shaders.remove(i);
 				//Collections.sort(shaders);
 				i=0;
